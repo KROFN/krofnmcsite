@@ -586,6 +586,81 @@
             color: #f44336;
         }
 
+        /* Language toggle */
+        .lang-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .lang-toggle-label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .lang-toggle {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lang-btn:hover {
+            color: #fff;
+        }
+
+        .lang-btn.active {
+            background: #4CAF50;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .translation-loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .translation-loading .loading-spinner {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+        }
+
+        .translation-loading p {
+            margin: 0;
+            color: #4CAF50;
+            font-size: 0.9rem;
+        }
+
+        .translation-error {
+            padding: 10px 15px;
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #f44336;
+            font-size: 0.85rem;
+        }
+
         .mod-card {
             cursor: pointer;
         }
@@ -663,7 +738,7 @@
         </div>
 
         <footer>
-            <p>Minecraft Modpack • Создано с ❤️</p>
+            <p>KROFNE Modpack • Создано ради Гопоты!</p>
         </footer>
     </div>
 
@@ -724,7 +799,7 @@
             'RPG + Лут + Баланс': '⚔️',
             'Хоррор': '👻',
             'Мобы + Боссы': '👹',
-            'Красота + Чил (для подруги)': '🌸',
+            'Красота + Чилл': '🌸',
             'Красота Геймплея (новые)': '✨',
             'Еда + Фермы': '🌾',
             'QoL (Интерфейс/Удобство)': '📦',
@@ -898,6 +973,12 @@
         const gallery = modalOverlay.querySelector('.gallery');
         const modalClose = modalOverlay.querySelector('.modal-close');
 
+        // Store current mod data and translations
+        let currentModData = null;
+        let originalDescription = '';
+        let translatedDescription = '';
+        let currentLang = 'original';
+
         // Close modal handlers
         modalClose.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => {
@@ -917,79 +998,76 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Simple Markdown to HTML converter
-        function markdownToHtml(md) {
-            if (!md) return '<p>Описание недоступно</p>';
+        // Sanitize HTML from Modrinth (body is HTML, not markdown!)
+        function sanitizeHtml(html) {
+            if (!html) return '<p>Описание недоступно</p>';
             
-            let html = md;
+            // Create a temporary element to parse HTML
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
             
-            // Escape HTML (prevent XSS) - using unicode to avoid encoding issues
-            html = html.replace(/&/g, '\x26amp;').replace(/</g, '\x26lt;').replace(/>/g, '\x26gt;');
+            // Remove potentially dangerous elements
+            const dangerousTags = ['script', 'style', 'object', 'embed', 'form', 'input'];
+            dangerousTags.forEach(tag => {
+                temp.querySelectorAll(tag).forEach(el => el.remove());
+            });
             
-            // Code blocks
-            html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+            // Remove dangerous attributes
+            temp.querySelectorAll('*').forEach(el => {
+                // Remove event handlers and javascript: URLs
+                Array.from(el.attributes).forEach(attr => {
+                    if (attr.name.startsWith('on') || 
+                        (attr.value && attr.value.toLowerCase().includes('javascript:'))) {
+                        el.removeAttribute(attr.name);
+                    }
+                });
+            });
             
-            // Inline code
-            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            // Convert iframes to links (for YouTube embeds etc.)
+            temp.querySelectorAll('iframe').forEach(iframe => {
+                const src = iframe.getAttribute('src') || '';
+                const link = document.createElement('a');
+                link.href = src;
+                link.target = '_blank';
+                link.textContent = '🎬 Открыть видео';
+                link.style.cssText = 'display: inline-block; padding: 10px 20px; background: #4CAF50; color: #000; border-radius: 8px; text-decoration: none; margin: 10px 0;';
+                iframe.replaceWith(link);
+            });
             
-            // Headers
-            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+            // Make all links open in new tab
+            temp.querySelectorAll('a').forEach(a => {
+                a.setAttribute('target', '_blank');
+                a.setAttribute('rel', 'noopener noreferrer');
+            });
             
-            // Bold and italic
-            html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-            html = html.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
-            html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
-            html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+            // Add loading="lazy" to images
+            temp.querySelectorAll('img').forEach(img => {
+                img.setAttribute('loading', 'lazy');
+                // Make images clickable to open full size
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => {
+                    window.open(img.src, '_blank');
+                });
+            });
             
-            // Links
-            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-            
-            // Images (remove them to avoid clutter)
-            html = html.replace(/!\[([^\]]*)\]\([^)]+\)/g, '');
-            
-            // Blockquotes
-            html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
-            
-            // Unordered lists
-            html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
-            html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-            
-            // Ordered lists
-            html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-            
-            // Horizontal rules
-            html = html.replace(/^---+$/gm, '<hr>');
-            
-            // Paragraphs
-            html = html.split('\n\n').map(block => {
-                if (block.trim() && 
-                    !block.startsWith('<h') && 
-                    !block.startsWith('<ul') && 
-                    !block.startsWith('<ol') && 
-                    !block.startsWith('<pre') && 
-                    !block.startsWith('<blockquote') &&
-                    !block.startsWith('<hr')) {
-                    return `<p>${block.replace(/\n/g, '<br>')}</p>`;
-                }
-                return block;
-            }).join('\n');
-            
-            return html;
+            return temp.innerHTML;
         }
 
-        // Fetch mod info from Modrinth
+        // Fetch mod info from Modrinth with improved search
         async function fetchModInfo(modName) {
             const headers = {
                 'User-Agent': 'KrofneModpackSite/1.0 (contact: krofn@example.com)'
             };
 
             try {
-                // Search for mod
-                const searchUrl = `https://api.modrinth.com/v2/search?query=${encodeURIComponent(modName)}&facets=[["project_type:mod"]]&limit=1&index=relevance`;
+                // Clean up mod name for better search (remove version numbers, suffixes)
+                let searchName = modName
+                    .replace(/\s*\(.*?\)/g, '') // Remove parentheses content like (CTOV)
+                    .replace(/\s*\[.*?\]/g, '') // Remove brackets content
+                    .trim();
+                
+                // Search for mod with limit=5 to find best match
+                const searchUrl = `https://api.modrinth.com/v2/search?query=${encodeURIComponent(searchName)}&facets=[["project_type:mod"]]&limit=5&index=relevance`;
                 const searchResponse = await fetch(searchUrl, { headers });
                 
                 if (!searchResponse.ok) {
@@ -1002,7 +1080,36 @@
                     return { error: 'Мод не найден на Modrinth' };
                 }
                 
-                const projectId = searchData.hits[0].project_id;
+                // Find best match by comparing titles
+                let bestMatch = searchData.hits[0];
+                const modNameLower = modName.toLowerCase();
+                
+                for (const hit of searchData.hits) {
+                    const hitTitleLower = hit.title.toLowerCase();
+                    const hitSlugLower = hit.slug ? hit.slug.toLowerCase() : '';
+                    
+                    // Exact match by slug (highest priority)
+                    if (hitSlugLower === modNameLower || hitSlugLower === searchName.toLowerCase()) {
+                        bestMatch = hit;
+                        break;
+                    }
+                    // Exact match by title
+                    if (hitTitleLower === modNameLower) {
+                        bestMatch = hit;
+                        break;
+                    }
+                    // Title contains the search name (not a compat/addon)
+                    const isCompatOrAddon = hit.title.toLowerCase().includes('compat') || 
+                                           hit.title.toLowerCase().includes('addon') ||
+                                           hit.slug.toLowerCase().includes('compat') ||
+                                           hit.slug.toLowerCase().includes('addon');
+                    if (hitTitleLower.includes(searchName.toLowerCase()) && !isCompatOrAddon) {
+                        bestMatch = hit;
+                        break;
+                    }
+                }
+                
+                const projectId = bestMatch.project_id;
                 
                 // Get full project info
                 const projectUrl = `https://api.modrinth.com/v2/project/${projectId}`;
@@ -1030,14 +1137,164 @@
             }
         }
 
+        // Translate text using Google Translate API (free, no key required)
+        async function translateText(text, targetLang = 'ru') {
+            if (!text) return '';
+            
+            // Extract plain text from HTML for translation
+            const temp = document.createElement('div');
+            temp.innerHTML = text;
+            const plainText = temp.textContent || temp.innerText || '';
+            
+            if (!plainText.trim()) return text;
+            
+            // Split into chunks (Google Translate has limits)
+            const maxChunkSize = 4500;
+            const chunks = [];
+            let currentChunk = '';
+            
+            // Split by sentences to avoid cutting mid-sentence
+            const sentences = plainText.match(/[^.!?]+[.!?]+/g) || [plainText];
+            
+            for (const sentence of sentences) {
+                if ((currentChunk + sentence).length > maxChunkSize) {
+                    if (currentChunk) chunks.push(currentChunk);
+                    currentChunk = sentence;
+                } else {
+                    currentChunk += sentence;
+                }
+            }
+            if (currentChunk) chunks.push(currentChunk);
+            
+            // Translate each chunk
+            const translatedChunks = [];
+            
+            for (const chunk of chunks) {
+                try {
+                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodeURIComponent(chunk)}`;
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error('Translation failed');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Extract translated text from response
+                    if (data && data[0]) {
+                        const translated = data[0].map(item => item[0] || '').join('');
+                        translatedChunks.push(translated);
+                    } else {
+                        translatedChunks.push(chunk);
+                    }
+                } catch (error) {
+                    console.error('Translation error:', error);
+                    translatedChunks.push(chunk);
+                }
+            }
+            
+            // Reconstruct HTML with translated text
+            const translatedText = translatedChunks.join(' ');
+            
+            // Return as HTML paragraph
+            return `<p>${translatedText}</p>`;
+        }
+
+        // Update description in modal
+        function updateModalDescription(html, showLangToggle = true) {
+            const langToggleHtml = showLangToggle ? `
+                <div class="lang-toggle-container">
+                    <span class="lang-toggle-label">🌐 Язык:</span>
+                    <div class="lang-toggle">
+                        <button class="lang-btn ${currentLang === 'original' ? 'active' : ''}" data-lang="original">Original</button>
+                        <button class="lang-btn ${currentLang === 'ru' ? 'active' : ''}" data-lang="ru">Russian</button>
+                    </div>
+                </div>
+            ` : '';
+            
+            modalBody.innerHTML = `
+                ${langToggleHtml}
+                <div id="translation-status"></div>
+                <div class="modal-description">${html}</div>
+            `;
+            
+            // Add event listeners for language toggle
+            if (showLangToggle) {
+                modalBody.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.addEventListener('click', () => handleLanguageSwitch(btn.dataset.lang));
+                });
+            }
+        }
+
+        // Handle language switch
+        async function handleLanguageSwitch(lang) {
+            if (lang === currentLang) return;
+            
+            currentLang = lang;
+            
+            // Update button states
+            modalBody.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            const statusEl = document.getElementById('translation-status');
+            const descEl = modalBody.querySelector('.modal-description');
+            
+            if (lang === 'original') {
+                // Show original
+                statusEl.innerHTML = '';
+                descEl.innerHTML = originalDescription;
+            } else if (lang === 'ru') {
+                // Show translation
+                if (translatedDescription) {
+                    // Already translated
+                    statusEl.innerHTML = '';
+                    descEl.innerHTML = translatedDescription;
+                } else {
+                    // Need to translate
+                    statusEl.innerHTML = `
+                        <div class="translation-loading">
+                            <div class="loading-spinner"></div>
+                            <p>⏳ Перевод на русский...</p>
+                        </div>
+                    `;
+                    descEl.innerHTML = '';
+                    
+                    try {
+                        translatedDescription = await translateText(originalDescription, 'ru');
+                        statusEl.innerHTML = '';
+                        descEl.innerHTML = translatedDescription;
+                    } catch (error) {
+                        console.error('Translation error:', error);
+                        statusEl.innerHTML = `
+                            <div class="translation-error">
+                                ❌ Ошибка перевода. Показан оригинал.
+                            </div>
+                        `;
+                        descEl.innerHTML = originalDescription;
+                        currentLang = 'original';
+                        modalBody.querySelectorAll('.lang-btn').forEach(btn => {
+                            btn.classList.toggle('active', btn.dataset.lang === 'original');
+                        });
+                    }
+                }
+            }
+        }
+
         // Show mod info in modal
         function showModInfo(mod) {
+            // Store data for translation
+            currentModData = mod;
+            originalDescription = sanitizeHtml(mod.description);
+            translatedDescription = '';
+            currentLang = 'original';
+            
             modalTitle.textContent = mod.title;
             modalIcon.src = mod.icon_url || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%23666" font-size="40">?</text></svg>';
             modalLink.href = `https://modrinth.com/mod/${mod.slug}`;
             
-            // Description
-            modalBody.innerHTML = `<div class="modal-description">${markdownToHtml(mod.description)}</div>`;
+            // Description with language toggle
+            updateModalDescription(originalDescription, true);
             
             // Gallery
             if (mod.gallery && mod.gallery.length > 0) {
