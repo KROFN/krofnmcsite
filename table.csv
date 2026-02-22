@@ -1,0 +1,56 @@
+Категория,Мод,Side,Краткое описание
+Мироген + Структуры,Terralith,Both,Эпичные биомы и ландшафты.
+,ChoiceTheorem's Overhauled Village (CTOV),Both,Улучшенные деревни.
+,Dungeons and Taverns,Both,Красивые подземелья/таверны.
+,Structory,Both,Больше структур в overworld.
+,When Dungeons Arise,Both,30+ огромных данжей.
+Техника (Create),Create,Both,"Фабрики, механизмы."
+,Create Crafts & Additions,Both,"Электричество, моторы."
+,Create: Steam 'n' Rails,Both,Поезда и рельсы.
+,Create Big Cannons,Both,Артиллерия для боссов.
+RPG + Лут + Баланс,DivineRPG,Both,"Измерения, боссы, шмот."
+,Relics,Both,Реликвии с перками.
+,Artifacts,Both,Артефакты с эффектами.
+,Enigmatic Legacy,Both,Эпичный сет брони/предметов.
+,Apotheosis,Both,Прокачка энчантов/спавнеров.
+Хоррор,SCP Lockdown,Both,SCP-монстры (конфиг: низкий спавн).
+Мобы + Боссы,Project Alpha,Both,Новые боссы/мобы.
+,Born in Chaos,Both,Хаотичные undead/спириты.
+,Alex's Mobs,Both,80+ реалистичных животных.
+Красота + Чил (для подруги),Distant Horizons,Client,Далёкие LOD-виды.
+,Chipped,Both,11k+ декоративных блоков.
+,Macaw's Furniture,Both,Мебель для уютных баз.
+,Serene Seasons,Both,"Смена сезонов (цвета, погода)."
+,AmbientSounds,Client,Звуки природы.
+,Sound Physics Remastered,Client,Реалистичное эхо/отражения.
+,Presence Footsteps,Client,Шаги по поверхностям.
+Красота Геймплея (новые),Not Enough Animations,Client,Плавные анимации действий.
+,LambDynamicLights,Client,Динамический свет везде.
+,Better Animations Collection,Client,Живые модели/эффекты.
+Еда + Фермы,Farmer's Delight,Both,"Кулинария, интеграция с Create."
+QoL (Интерфейс/Удобство),Roughly Enough Items (REI),Both,Рецепты/поиск.
+,Patchouli,Both,Гайд-книжки модов.
+,Waystones,Both,Телепорты.
+,Lootr,Both,Личный лут в сундуках.
+,Jade,Client,Инфо о блоках/мобах.
+,AppleSkin,Client,HUD голода/насыщения.
+,Mouse Tweaks,Client,Drag&drop инвентарь.
+,Inventory HUD+,Client,HUD инвентаря.
+,Supplementaries,Both,Декор + фичи (пушки предметов).
+,Sophisticated Backpacks,Both,Улучшенные рюкзаки.
+Оптимизация (FPS + Стабильность),Embeddium,Client,Sodium для Forge (+300 FPS).
+,Oculus,Client,Шейдеры с Embeddium.
+,ModernFix,Both,"Фиксы багов, +FPS."
+,FerriteCore,Both,Оптимизация памяти.
+,Clumps,Both,Сливание XP-орбов.
+,Memory Leak Fix,Both,Фикс утечек памяти.
+,Entity Culling,Client,Куллинг сущностей.
+,Smooth Boot,Both,Быстрая загрузка.
+,LazyDFU,Both,Быстрый DFU.
+,Dynamic FPS,Client,FPS в фоне.
+Зависимости (обязательно!),Architectury API,Both,Для кросс-лоадеров.
+,Cloth Config API,Both,Конфиги модов.
+,GeckoLib,Both,"Анимации (Alex's, Born in Chaos)."
+,Citadel,Both,"Рендер (Artifacts, etc.)."
+,Forge Config API Port,Both,Конфиги.
+,Connectivity,Client,Connected textures.

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modpack - Список модов</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(76, 175, 80, 0.6);
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4CAF50;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+
+        .filter-btn.active {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .category {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-header {
+            background: linear-gradient(90deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%);
+            padding: 18px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .category-header h2 {
+            font-size: 1.2rem;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-icon {
+            font-size: 1.4rem;
+        }
+
+        .category-count {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .mods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .mod-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mod-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(76, 175, 80, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .mod-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .side-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .side-both {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: #fff;
+        }
+
+        .side-client {
+            background: linear-gradient(135deg, #2196F3, #1565C0);
+            color: #fff;
+        }
+
+        .mod-description {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            color: #555;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .mods-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+
+            .stat {
+                padding: 12px 18px;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+            color: #4CAF50;
+            font-size: 1.2rem;
+        }
+
+        .category.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        .category.collapsed .mods-grid {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(76, 175, 80, 0.2);
+            border-top-color: #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <header>
+            <h1>🎮 MODPACK</h1>
+            <p class="subtitle">Список модов в сборке Minecraft</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="total-mods">0</div>
+                    <div class="stat-label">Всего модов</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="total-categories">0</div>
+                    <div class="stat-label">Категорий</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="client-mods">0</div>
+                    <div class="stat-label">Client-only</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="search" placeholder="🔍 Поиск модов...">
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Все моды</button>
+            <button class="filter-btn" data-filter="both">Both</button>
+            <button class="filter-btn" data-filter="client">Client</button>
+        </div>
+
+        <div class="categories" id="categories">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Загрузка модов...</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Minecraft Modpack • Создано с ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Parse CSV
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+
+                if (values.length >= 4 && values[1]) {
+                    data.push({
+                        category: values[0],
+                        name: values[1],
+                        side: values[2],
+                        description: values[3]
+                    });
+                }
+            }
+            return data;
+        }
+
+        // Category icons mapping
+        const categoryIcons = {
+            'Мироген + Структуры': '🗺️',
+            'Техника (Create)': '⚙️',
+            'RPG + Лут + Баланс': '⚔️',
+            'Хоррор': '👻',
+            'Мобы + Боссы': '👹',
+            'Красота + Чил (для подруги)': '🌸',
+            'Красота Геймплея (новые)': '✨',
+            'Еда + Фермы': '🌾',
+            'QoL (Интерфейс/Удобство)': '📦',
+            'Оптимизация (FPS + Стабильность)': '🚀',
+            'Зависимости (обязательно!)': '🔧'
+        };
+
+        let allMods = [];
+        let categories = {};
+
+        // Render categories
+        function render(filter = 'all', searchTerm = '') {
+            const container = document.getElementById('categories');
+            container.innerHTML = '';
+
+            let totalMods = 0;
+            let clientMods = 0;
+            let filteredCategories = {};
+
+            // Filter mods
+            Object.keys(categories).forEach(cat => {
+                const mods = categories[cat].filter(mod => {
+                    const matchesFilter = filter === 'all' || mod.side.toLowerCase() === filter;
+                    const matchesSearch = !searchTerm || 
+                        mod.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        mod.description.toLowerCase().includes(searchTerm.toLowerCase());
+                    return matchesFilter && matchesSearch;
+                });
+
+                if (mods.length > 0) {
+                    filteredCategories[cat] = mods;
+                    totalMods += mods.length;
+                    clientMods += mods.filter(m => m.side.toLowerCase() === 'client').length;
+                }
+            });
+
+            // Update stats
+            document.getElementById('total-mods').textContent = totalMods;
+            document.getElementById('total-categories').textContent = Object.keys(filteredCategories).length;
+            document.getElementById('client-mods').textContent = clientMods;
+
+            if (Object.keys(filteredCategories).length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>Ничего не найдено 😕</h3>
+                        <p>Попробуйте изменить параметры поиска</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render categories
+            Object.keys(filteredCategories).forEach(cat => {
+                const mods = filteredCategories[cat];
+                const icon = categoryIcons[cat] || '📁';
+                
+                const categoryEl = document.createElement('div');
+                categoryEl.className = 'category';
+                categoryEl.innerHTML = `
+                    <div class="category-header">
+                        <h2><span class="category-icon">${icon}</span> ${cat}</h2>
+                        <div>
+                            <span class="category-count">${mods.length} модов</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </div>
+                    <div class="mods-grid">
+                        ${mods.map(mod => `
+                            <div class="mod-card">
+                                <div class="mod-name">
+                                    ${mod.name}
+                                    <span class="side-badge side-${mod.side.toLowerCase()}">${mod.side}</span>
+                                </div>
+                                <div class="mod-description">${mod.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // Toggle category
+                categoryEl.querySelector('.category-header').addEventListener('click', () => {
+                    categoryEl.classList.toggle('collapsed');
+                });
+
+                container.appendChild(categoryEl);
+            });
+        }
+
+        // Load data
+        fetch('table.csv')
+            .then(response => response.text())
+            .then(text => {
+                allMods = parseCSV(text);
+                
+                // Group by category
+                let currentCategory = '';
+                allMods.forEach(mod => {
+                    if (mod.category) {
+                        currentCategory = mod.category;
+                    }
+                    mod.category = currentCategory;
+                    
+                    if (!categories[currentCategory]) {
+                        categories[currentCategory] = [];
+                    }
+                    categories[currentCategory].push(mod);
+                });
+
+                render();
+            })
+            .catch(err => {
+                document.getElementById('categories').innerHTML = `
+                    <div class="no-results">
+                        <h3>Ошибка загрузки 😢</h3>
+                        <p>Не удалось загрузить table.csv</p>
+                    </div>
+                `;
+            });
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', (e) => {
+            const filter = document.querySelector('.filter-btn.active').dataset.filter;
+            render(filter, e.target.value);
+        });
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const searchTerm = document.getElementById('search').value;
+                render(btn.dataset.filter, searchTerm);
+            });
+        });
+    </script>
+</body>
+</html>
