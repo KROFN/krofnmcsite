@@ -356,6 +356,270 @@
         .hidden {
             display: none !important;
         }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 20px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: linear-gradient(145deg, #1e1e32 0%, #162038 100%);
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: translateY(-30px);
+            transition: transform 0.3s ease;
+            margin: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title-wrap {
+            flex: 1;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .modal-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-link:hover {
+            text-decoration: underline;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(244, 67, 54, 0.5);
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-description {
+            color: #ccc;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .modal-description h1,
+        .modal-description h2,
+        .modal-description h3 {
+            color: #4CAF50;
+            margin: 20px 0 10px;
+        }
+
+        .modal-description h1 { font-size: 1.4rem; }
+        .modal-description h2 { font-size: 1.2rem; }
+        .modal-description h3 { font-size: 1.1rem; }
+
+        .modal-description p {
+            margin-bottom: 15px;
+        }
+
+        .modal-description ul,
+        .modal-description ol {
+            margin: 10px 0 15px 25px;
+        }
+
+        .modal-description li {
+            margin-bottom: 5px;
+        }
+
+        .modal-description code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+
+        .modal-description pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .modal-description pre code {
+            padding: 0;
+            background: none;
+        }
+
+        .modal-description a {
+            color: #4CAF50;
+        }
+
+        .modal-description blockquote {
+            border-left: 3px solid #4CAF50;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #aaa;
+        }
+
+        .gallery-section {
+            padding: 0 25px 25px;
+        }
+
+        .gallery-title {
+            font-size: 1.1rem;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .gallery {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .gallery::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .gallery::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .gallery::-webkit-scrollbar-thumb {
+            background: rgba(76, 175, 80, 0.5);
+            border-radius: 3px;
+        }
+
+        .gallery-item {
+            flex-shrink: 0;
+            width: 200px;
+            height: 120px;
+            border-radius: 10px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            border-color: #4CAF50;
+        }
+
+        .modal-loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+
+        .modal-error {
+            text-align: center;
+            padding: 40px;
+            color: #f44336;
+        }
+
+        .mod-card {
+            cursor: pointer;
+        }
+
+        .mod-card::after {
+            content: 'ℹ️';
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .mod-card:hover::after {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                margin: 10px;
+            }
+
+            .modal-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .gallery-item {
+                width: 150px;
+                height: 90px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -363,7 +627,7 @@
     
     <div class="container">
         <header>
-            <h1>🎮 MODPACK</h1>
+            <h1>KROFNE MODPACK</h1>
             <p class="subtitle">Список модов в сборке Minecraft</p>
             <div class="stats">
                 <div class="stat">
@@ -595,6 +859,251 @@
                 render(btn.dataset.filter, searchTerm);
             });
         });
+
+        // ============ MODRINTH API & MODAL ============
+        
+        // Create modal HTML structure
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'modal-overlay';
+        modalOverlay.innerHTML = `
+            <div class="modal">
+                <div class="modal-header">
+                    <img class="modal-icon" src="" alt="Mod icon">
+                    <div class="modal-title-wrap">
+                        <h2 class="modal-title"></h2>
+                        <a class="modal-link" href="#" target="_blank">Открыть на Modrinth ↗</a>
+                    </div>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Загрузка информации о моде...</p>
+                    </div>
+                </div>
+                <div class="gallery-section" style="display: none;">
+                    <h3 class="gallery-title">📸 Скриншоты</h3>
+                    <div class="gallery"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalOverlay);
+
+        // Modal elements
+        const modalIcon = modalOverlay.querySelector('.modal-icon');
+        const modalTitle = modalOverlay.querySelector('.modal-title');
+        const modalLink = modalOverlay.querySelector('.modal-link');
+        const modalBody = modalOverlay.querySelector('.modal-body');
+        const gallerySection = modalOverlay.querySelector('.gallery-section');
+        const gallery = modalOverlay.querySelector('.gallery');
+        const modalClose = modalOverlay.querySelector('.modal-close');
+
+        // Close modal handlers
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openModal() {
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Simple Markdown to HTML converter
+        function markdownToHtml(md) {
+            if (!md) return '<p>Описание недоступно</p>';
+            
+            let html = md;
+            
+            // Escape HTML (prevent XSS) - using unicode to avoid encoding issues
+            html = html.replace(/&/g, '\x26amp;').replace(/</g, '\x26lt;').replace(/>/g, '\x26gt;');
+            
+            // Code blocks
+            html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+            
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Headers
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+            
+            // Bold and italic
+            html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html = html.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+            html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+            
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+            
+            // Images (remove them to avoid clutter)
+            html = html.replace(/!\[([^\]]*)\]\([^)]+\)/g, '');
+            
+            // Blockquotes
+            html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+            
+            // Unordered lists
+            html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+            
+            // Ordered lists
+            html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+            
+            // Horizontal rules
+            html = html.replace(/^---+$/gm, '<hr>');
+            
+            // Paragraphs
+            html = html.split('\n\n').map(block => {
+                if (block.trim() && 
+                    !block.startsWith('<h') && 
+                    !block.startsWith('<ul') && 
+                    !block.startsWith('<ol') && 
+                    !block.startsWith('<pre') && 
+                    !block.startsWith('<blockquote') &&
+                    !block.startsWith('<hr')) {
+                    return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+                }
+                return block;
+            }).join('\n');
+            
+            return html;
+        }
+
+        // Fetch mod info from Modrinth
+        async function fetchModInfo(modName) {
+            const headers = {
+                'User-Agent': 'KrofneModpackSite/1.0 (contact: krofn@example.com)'
+            };
+
+            try {
+                // Search for mod
+                const searchUrl = `https://api.modrinth.com/v2/search?query=${encodeURIComponent(modName)}&facets=[["project_type:mod"]]&limit=1&index=relevance`;
+                const searchResponse = await fetch(searchUrl, { headers });
+                
+                if (!searchResponse.ok) {
+                    throw new Error('Ошибка поиска');
+                }
+                
+                const searchData = await searchResponse.json();
+                
+                if (!searchData.hits || searchData.hits.length === 0) {
+                    return { error: 'Мод не найден на Modrinth' };
+                }
+                
+                const projectId = searchData.hits[0].project_id;
+                
+                // Get full project info
+                const projectUrl = `https://api.modrinth.com/v2/project/${projectId}`;
+                const projectResponse = await fetch(projectUrl, { headers });
+                
+                if (!projectResponse.ok) {
+                    throw new Error('Ошибка загрузки проекта');
+                }
+                
+                const projectData = await projectResponse.json();
+                
+                return {
+                    success: true,
+                    id: projectId,
+                    title: projectData.title || modName,
+                    description: projectData.body || '',
+                    icon_url: projectData.icon_url || '',
+                    gallery: projectData.gallery || [],
+                    slug: projectData.slug || projectId
+                };
+                
+            } catch (error) {
+                console.error('Modrinth API error:', error);
+                return { error: 'Не удалось загрузить данные с Modrinth' };
+            }
+        }
+
+        // Show mod info in modal
+        function showModInfo(mod) {
+            modalTitle.textContent = mod.title;
+            modalIcon.src = mod.icon_url || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%23666" font-size="40">?</text></svg>';
+            modalLink.href = `https://modrinth.com/mod/${mod.slug}`;
+            
+            // Description
+            modalBody.innerHTML = `<div class="modal-description">${markdownToHtml(mod.description)}</div>`;
+            
+            // Gallery
+            if (mod.gallery && mod.gallery.length > 0) {
+                const images = mod.gallery.slice(0, 5);
+                gallery.innerHTML = images.map(img => 
+                    `<img class="gallery-item" src="${img.url}" alt="${img.title || 'Screenshot'}" loading="lazy">`
+                ).join('');
+                gallerySection.style.display = 'block';
+                
+                // Click to open full image
+                gallery.querySelectorAll('.gallery-item').forEach(img => {
+                    img.addEventListener('click', () => {
+                        window.open(img.src, '_blank');
+                    });
+                });
+            } else {
+                gallerySection.style.display = 'none';
+            }
+            
+            openModal();
+        }
+
+        function showError(errorMsg) {
+            modalTitle.textContent = 'Ошибка';
+            modalIcon.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%23f44336" font-size="40">!</text></svg>';
+            modalLink.href = '#';
+            modalBody.innerHTML = `<div class="modal-error"><p>❌ ${errorMsg}</p></div>`;
+            gallerySection.style.display = 'none';
+            openModal();
+        }
+
+        // Handle mod card click
+        async function handleModCardClick(event) {
+            // Don't trigger if clicking on category header
+            if (event.target.closest('.category-header')) return;
+            
+            const card = event.target.closest('.mod-card');
+            if (!card) return;
+            
+            const modName = card.querySelector('.mod-name').childNodes[0].textContent.trim();
+            
+            // Show loading state
+            modalTitle.textContent = modName;
+            modalIcon.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23333" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%234CAF50" font-size="30">...</text></svg>';
+            modalLink.href = '#';
+            modalBody.innerHTML = `
+                <div class="modal-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Загрузка информации о моде...</p>
+                </div>
+            `;
+            gallerySection.style.display = 'none';
+            openModal();
+            
+            // Fetch and show info
+            const result = await fetchModInfo(modName);
+            
+            if (result.error) {
+                showError(result.error);
+            } else {
+                showModInfo(result);
+            }
+        }
+
+        // Delegate click events for mod cards
+        document.getElementById('categories').addEventListener('click', handleModCardClick);
     </script>
 </body>
 </html>
